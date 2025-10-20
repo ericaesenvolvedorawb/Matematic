@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroMundo: Aventuras na Leitura e nos Números</title>
+    <style>
+        /* Importação da fonte OpenDyslexic */
+        @font-face {
+            font-family: 'OpenDyslexic';
+            src: url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/otf/OpenDyslexic-Regular.otf') format('opentype');
+        }
+
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #2196F3;
+            --accent-color: #FF9800;
+            --background-color: #f5f5f5;
+            --text-color: #333;
+            --card-color: #fff;
+            --shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.4;
+            font-size: 14px;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 12px;
+            background-color: var(--card-color);
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 70px; /* Espaço para a navegação inferior */
+        }
+
+        /* Estilos para acessibilidade */
+        .dyslexic-font {
+            font-family: 'OpenDyslexic', Arial, sans-serif;
+            letter-spacing: 0.05em;
+        }
+
+        .uppercase {
+            text-transform: uppercase;
+        }
+
+        .high-contrast {
+            --background-color: #000;
+            --card-color: #111;
+            --text-color: #fff;
+            --primary-color: #ffcc00;
+            --secondary-color: #00ccff;
+            --accent-color: #ff6600;
+        }
+
+        /* Header e navegação */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .avatar-section {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+
+        .user-name {
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        /* Menu principal */
+        .main-menu {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .menu-item {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+        }
+
+        .menu-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+        }
+
+        .menu-item.portuguese {
+            background-color: var(--secondary-color);
+        }
+
+        .menu-item.math {
+            background-color: var(--accent-color);
+        }
+
+        .menu-item h2 {
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+
+        .menu-item p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        /* Atividades de Matemática */
+        .math-activity {
+            background-color: var(--card-color);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 16px;
+            box-shadow: var(--shadow);
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .activity-title {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+
+        .close-activity {
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        .activity-content {
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+
+        /* Tesouro do Pirata */
+        .pirate-scene {
+            background-color: #e3f2fd;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .treasure-chest {
+            font-size: 3rem;
+            margin: 8px 0;
+        }
+
+        .coins-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 12px 0;
+        }
+
+        .coin {
+            font-size: 2rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .coin:hover {
+            transform: scale(1.2);
+        }
+
+        .coin.selected {
+            transform: scale(1.1);
+            filter: brightness(0.8);
+        }
+
+        .answer-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin: 12px 0;
+            min-height: 60px;
+            background-color: #fff9c4;
+            border-radius: 8px;
+            padding: 8px;
+        }
+
+        /* Festa na Floresta */
+        .forest-scene {
+            background-color: #e8f5e9;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .animals-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 12px 0;
+        }
+
+        .animal {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .animal-icon {
+            font-size: 2.5rem;
+        }
+
+        .carrots-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 12px 0;
+        }
+
+        .carrot {
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .carrot:hover {
+            transform: scale(1.2);
+        }
+
+        .bear-mouth {
+            font-size: 2rem;
+            margin-top: 8px;
+            min-height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffcdd2;
+            border-radius: 8px;
+            padding: 8px;
+        }
+
+        .quantity-bar {
+            height: 20px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            margin: 12px 0;
+            overflow: hidden;
+        }
+
+        .quantity-fill {
+            height: 100%;
+            background-color: #4CAF50;
+            width: 100%;
+            transition: width 0.5s;
+        }
+
+        /* Carrinho de Sorvete */
+        .icecream-scene {
+            background-color: #fff3e0;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .icecream-cart {
+            font-size: 3rem;
+            margin: 8px 0;
+        }
+
+        .shapes-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 12px 0;
+        }
+
+        .shape {
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            background-color: white;
+            transition: transform 0.2s;
+        }
+
+        .shape:hover {
+            transform: scale(1.2);
+        }
+
+        .icecream-cone {
+            font-size: 3rem;
+            margin: 12px 0;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .shape-on-cone {
+            margin-bottom: -15px;
+            z-index: 1;
+        }
+
+        /* Botões */
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+        }
+
+        .btn-accent {
+            background-color: var(--accent-color);
+        }
+
+        /* Navegação inferior */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--card-color);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 8px;
+            flex: 1;
+            max-width: 80px;
+        }
+
+        .nav-icon {
+            font-size: 1.3rem;
+            margin-bottom: 2px;
+        }
+
+        .nav-label {
+            font-size: 0.7rem;
+        }
+
+        .nav-item.active {
+            color: var(--primary-color);
+            font-weight: bold;
+            background-color: rgba(76, 175, 80, 0.1);
+        }
+
+        /* Utilitários */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-16 {
+            margin-top: 16px;
+        }
+
+        /* Tela de seleção de atividades */
+        .activity-selection {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .activity-option {
+            background-color: var(--card-color);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            border: 2px solid transparent;
+        }
+
+        .activity-option:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+            border-color: var(--accent-color);
+        }
+
+        .activity-option h3 {
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+
+        .activity-icon {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+        }
+
+        /* Mensagens de feedback */
+        .feedback-message {
+            padding: 10px;
+            border-radius: 8px;
+            margin: 12px 0;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .feedback-correct {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .feedback-incorrect {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        /* Instruções */
+        .instructions {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <div class="logo">NeuroMundo</div>
+            <div class="avatar-section">
+                <div class="avatar" id="user-avatar">🦊</div>
+                <div class="user-name" id="user-name">Aventureiro</div>
+            </div>
+        </header>
+
+        <!-- Tela Principal -->
+        <div id="main-screen">
+            <div class="main-menu">
+                <div class="menu-item portuguese" id="portuguese-btn">
+                    <h2>Floresta das Palavras</h2>
+                    <p>Língua Portuguesa</p>
+                </div>
+                <div class="menu-item math" id="math-btn">
+                    <h2>Montanha dos Números</h2>
+                    <p>Matemática</p>
+                </div>
+                <div class="menu-item" id="missions-btn">
+                    <h2>Mapa da Aventura</h2>
+                    <p>Missões</p>
+                </div>
+                <div class="menu-item" id="achievements-btn">
+                    <h2>Baú de Troféus</h2>
+                    <p>Conquistas</p>
+                </div>
+            </div>
+
+            <div class="welcome-message">
+                <h3>Bem-vindo ao NeuroMundo!</h3>
+                <p>Escolha uma das áreas para começar sua aventura de aprendizado.</p>
+            </div>
+        </div>
+
+        <!-- Tela de Português -->
+        <div id="portuguese-screen" class="hidden">
+            <div class="activity-header">
+                <h2 class="activity-title">Floresta das Palavras</h2>
+                <button class="close-activity" id="close-portuguese">×</button>
+            </div>
+            
+            <div class="math-activity">
+                <h3>Caça ao Som Inicial</h3>
+                <p class="activity-content">Arraste o esquilo para as imagens que começam com a sílaba "CA".</p>
+                
+                <div class="activity-options">
+                    <div class="option" data-correct="true">CASA</div>
+                    <div class="option" data-correct="false">BOLA</div>
+                    <div class="option" data-correct="true">CACHORRO</div>
+                    <div class="option" data-correct="false">PATO</div>
+                </div>
+                
+                <button class="btn-secondary mt-16" id="next-portuguese-activity">Próxima Atividade</button>
+            </div>
+        </div>
+
+        <!-- Tela de Matemática - Seleção de Atividades -->
+        <div id="math-selection-screen" class="hidden">
+            <div class="activity-header">
+                <h2 class="activity-title">Montanha dos Números</h2>
+                <button class="close-activity" id="close-math-selection">×</button>
+            </div>
+            
+            <div class="activity-selection">
+                <div class="activity-option" id="pirate-activity-btn">
+                    <div class="activity-icon">🏴‍☠️</div>
+                    <h3>Tesouro do Pirata</h3>
+                    <p>Soma e Subtração</p>
+                </div>
+                
+                <div class="activity-option" id="forest-activity-btn">
+                    <div class="activity-icon">🌳</div>
+                    <h3>Festa na Floresta</h3>
+                    <p>Problemas de Lógica</p>
+                </div>
+                
+                <div class="activity-option" id="icecream-activity-btn">
+                    <div class="activity-icon">🍦</div>
+                    <h3>Carrinho de Sorvete</h3>
+                    <p>Formas Geométricas</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Atividade: Tesouro do Pirata -->
+        <div id="pirate-activity" class="hidden">
+            <div class="activity-header">
+                <h2 class="activity-title">Tesouro do Pirata</h2>
+                <button class="close-activity" id="close-pirate">×</button>
+            </div>
+            
+            <div class="math-activity">
+                <div class="pirate-scene">
+                    <div class="treasure-chest">🗃️</div>
+                    <p>Ajude o pirata a contar seu tesouro!</p>
+                </div>
+                
+                <div class="instructions">
+                    <p>🐚 O pirata tem 3 moedas de ouro. Ele encontra mais 2. Quantas moedas ele tem agora?</p>
+                </div>
+                
+                <div class="coins-container">
+                    <div class="coin" data-value="1">🟡</div>
+                    <div class="coin" data-value="1">🟡</div>
+                    <div class="coin" data-value="1">🟡</div>
+                    <div class="coin" data-value="1">🟡</div>
+                    <div class="coin" data-value="1">🟡</div>
+                </div>
+                
+                <div class="answer-area" id="pirate-answer">
+                    <p>Arraste as moedas para cá →</p>
+                </div>
+                
+                <div id="pirate-feedback" class="feedback-message hidden"></div>
+                
+                <button class="btn-secondary mt-16" id="check-pirate-answer">Verificar Resposta</button>
+                <button class="btn-accent mt-16" id="next-pirate-activity">Próxima Atividade</button>
+            </div>
+        </div>
+
+        <!-- Atividade: Festa na Floresta -->
+        <div id="forest-activity" class="hidden">
+            <div class="activity-header">
+                <h2 class="activity-title">Festa na Floresta</h2>
+                <button class="close-activity" id="close-forest">×</button>
+            </div>
+            
+            <div class="math-activity">
+                <div class="forest-scene">
+                    <div class="animals-container">
+                        <div class="animal">
+                            <div class="animal-icon">🐰</div>
+                            <p>Coelho</p>
+                        </div>
+                        <div class="animal">
+                            <div class="animal-icon">🐻</div>
+                            <p>Urso</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="instructions">
+                    <p>🐰 Coelho tem 6 cenouras. 🐻 Urso come 4. Quantas sobraram?</p>
+                </div>
+                
+                <div class="carrots-container">
+                    <div class="carrot" data-value="1">🥕</div>
+                    <div class="carrot" data-value="1">🥕</div>
+                    <div class="carrot" data-value="1">🥕</div>
+                    <div class="carrot" data-value="1">🥕</div>
+                    <div class="carrot" data-value="1">🥕</div>
+                </div>
+                
+                <div class="bear-mouth" id="bear-mouth">
+                    <p>Arraste as cenouras para a boca do urso →</p>
+                </div>
+                
+                <div class="quantity-bar">
+                    <div class="quantity-fill" id="quantity-fill" style="width: 100%"></div>
+                </div>
+                
+                <div id="forest-feedback" class="feedback-message hidden"></div>
+                
+                <button class="btn-secondary mt-16" id="check-forest-answer">Verificar Resposta</button>
+                <button class="btn-accent mt-16" id="next-forest-activity">Próxima Atividade</button>
+            </div>
+        </div>
+
+        <!-- Atividade: Carrinho de Sorvete -->
+        <div id="icecream-activity" class="hidden">
+            <div class="activity-header">
+                <h2 class="activity-title">Carrinho de Sorvete</h2>
+                <button class="close-activity" id="close-icecream">×</button>
+            </div>
+            
+            <div class="math-activity">
+                <div class="icecream-scene">
+                    <div class="icecream-cart">🍦</div>
+                    <p>Monte o sorvete com as formas corretas!</p>
+                </div>
+                
+                <div class="instructions">
+                    <p>Monte um sorvete com 1 bola 🔴 (círculo), 2 cubos 🧊 (quadrado) e 1 triângulo 🔺</p>
+                </div>
+                
+                <div class="shapes-container">
+                    <div class="shape" data-shape="circle">🔴</div>
+                    <div class="shape" data-shape="circle">🔴</div>
+                    <div class="shape" data-shape="square">🧊</div>
+                    <div class="shape" data-shape="square">🧊</div>
+                    <div class="shape" data-shape="square">🧊</div>
+                    <div class="shape" data-shape="triangle">🔺</div>
+                    <div class="shape" data-shape="triangle">🔺</div>
+                </div>
+                
+                <div class="icecream-cone" id="icecream-cone">
+                    <div>🍦</div>
+                    <p>Arraste as formas para a casquinha →</p>
+                </div>
+                
+                <div id="icecream-feedback" class="feedback-message hidden"></div>
+                
+                <button class="btn-secondary mt-16" id="check-icecream-answer">Verificar Resposta</button>
+                <button class="btn-accent mt-16" id="next-icecream-activity">Próxima Atividade</button>
+            </div>
+        </div>
+
+        <!-- Navegação Inferior -->
+        <div class="bottom-nav">
+            <div class="nav-item active" id="nav-home">
+                <div class="nav-icon">🏠</div>
+                <div class="nav-label">Início</div>
+            </div>
+            <div class="nav-item" id="nav-missions">
+                <div class="nav-icon">🗺️</div>
+                <div class="nav-label">Missões</div>
+            </div>
+            <div class="nav-item" id="nav-achievements">
+                <div class="nav-icon">🏆</div>
+                <div class="nav-label">Conquistas</div>
+            </div>
+            <div class="nav-item" id="nav-settings">
+                <div class="nav-icon">⚙️</div>
+                <div class="nav-label">Configurações</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Elementos DOM
+        const mainScreen = document.getElementById('main-screen');
+        const portugueseScreen = document.getElementById('portuguese-screen');
+        const mathSelectionScreen = document.getElementById('math-selection-screen');
+        const pirateActivity = document.getElementById('pirate-activity');
+        const forestActivity = document.getElementById('forest-activity');
+        const icecreamActivity = document.getElementById('icecream-activity');
+
+        // Botões de navegação
+        document.getElementById('portuguese-btn').addEventListener('click', () => showScreen(portugueseScreen));
+        document.getElementById('math-btn').addEventListener('click', () => showScreen(mathSelectionScreen));
+
+        // Botões de seleção de atividades de matemática
+        document.getElementById('pirate-activity-btn').addEventListener('click', () => showScreen(pirateActivity));
+        document.getElementById('forest-activity-btn').addEventListener('click', () => showScreen(forestActivity));
+        document.getElementById('icecream-activity-btn').addEventListener('click', () => showScreen(icecreamActivity));
+
+        // Botões de fechar/voltar
+        document.getElementById('close-portuguese').addEventListener('click', () => showScreen(mainScreen));
+        document.getElementById('close-math-selection').addEventListener('click', () => showScreen(mainScreen));
+        document.getElementById('close-pirate').addEventListener('click', () => showScreen(mathSelectionScreen));
+        document.getElementById('close-forest').addEventListener('click', () => showScreen(mathSelectionScreen));
+        document.getElementById('close-icecream').addEventListener('click', () => showScreen(mathSelectionScreen));
+
+        // Navegação inferior
+        document.getElementById('nav-home').addEventListener('click', () => {
+            showScreen(mainScreen);
+            setActiveNav('nav-home');
+        });
+
+        // Variáveis para controlar as atividades
+        let pirateCoins = [];
+        let forestCarrots = [];
+        let icecreamShapes = [];
+
+        // Atividade: Tesouro do Pirata
+        const coins = document.querySelectorAll('.coin');
+        const pirateAnswer = document.getElementById('pirate-answer');
+        const pirateFeedback = document.getElementById('pirate-feedback');
+
+        coins.forEach(coin => {
+            coin.addEventListener('click', function() {
+                if (pirateCoins.length < 5) {
+                    pirateCoins.push(this.getAttribute('data-value'));
+                    this.classList.add('selected');
+                    
+                    // Mover visualmente a moeda para a área de resposta
+                    const coinCopy = document.createElement('div');
+                    coinCopy.className = 'coin';
+                    coinCopy.textContent = this.textContent;
+                    coinCopy.setAttribute('data-value', '1');
+                    pirateAnswer.appendChild(coinCopy);
+                    
+                    // Atualizar instrução
+                    if (pirateAnswer.querySelector('p')) {
+                        pirateAnswer.querySelector('p').remove();
+                    }
+                }
+            });
+        });
+
+        document.getElementById('check-pirate-answer').addEventListener('click', function() {
+            const total = pirateCoins.reduce((sum, value) => sum + parseInt(value), 0);
+            
+            if (total === 5) {
+                pirateFeedback.textContent = 'Parabéns! O pirata tem 5 moedas agora! 🎉';
+                pirateFeedback.className = 'feedback-message feedback-correct';
+            } else {
+                pirateFeedback.textContent = 'Tente novamente! Conte as moedas com atenção.';
+                pirateFeedback.className = 'feedback-message feedback-incorrect';
+            }
+            pirateFeedback.classList.remove('hidden');
+        });
+
+        document.getElementById('next-pirate-activity').addEventListener('click', function() {
+            // Reiniciar atividade
+            pirateCoins = [];
+            coins.forEach(coin => coin.classList.remove('selected'));
+            pirateAnswer.innerHTML = '<p>Arraste as moedas para cá →</p>';
+            pirateFeedback.classList.add('hidden');
+            
+            // Ir para próxima atividade
+            showScreen(forestActivity);
+        });
+
+        // Atividade: Festa na Floresta
+        const carrots = document.querySelectorAll('.carrot');
+        const bearMouth = document.getElementById('bear-mouth');
+        const quantityFill = document.getElementById('quantity-fill');
+        const forestFeedback = document.getElementById('forest-feedback');
+
+        carrots.forEach(carrot => {
+            carrot.addEventListener('click', function() {
+                if (forestCarrots.length < 2) {
+                    forestCarrots.push(this.getAttribute('data-value'));
+                    this.classList.add('selected');
+                    
+                    // Mover visualmente a cenoura para a boca do urso
+                    const carrotCopy = document.createElement('div');
+                    carrotCopy.className = 'carrot';
+                    carrotCopy.textContent = this.textContent;
+                    carrotCopy.setAttribute('data-value', '1');
+                    bearMouth.appendChild(carrotCopy);
+                    
+                    // Atualizar instrução
+                    if (bearMouth.querySelector('p')) {
+                        bearMouth.querySelector('p').remove();
+                    }
+                    
+                    // Atualizar barra de quantidade
+                    const remaining = 5 - forestCarrots.length;
+                    quantityFill.style.width = `${(remaining / 5) * 100}%`;
+                }
+            });
+        });
+
+        document.getElementById('check-forest-answer').addEventListener('click', function() {
+            const remaining = 5 - forestCarrots.length;
+            
+            if (remaining === 3) {
+                forestFeedback.textContent = 'Excelente! Sobraram 3 cenouras! 🥕🥕🥕';
+                forestFeedback.className = 'feedback-message feedback-correct';
+            } else {
+                forestFeedback.textContent = 'Tente novamente! Conte quantas cenouras sobraram.';
+                forestFeedback.className = 'feedback-message feedback-incorrect';
+            }
+            forestFeedback.classList.remove('hidden');
+        });
+
+        document.getElementById('next-forest-activity').addEventListener('click', function() {
+            // Reiniciar atividade
+            forestCarrots = [];
+            carrots.forEach(carrot => carrot.classList.remove('selected'));
+            bearMouth.innerHTML = '<p>Arraste as cenouras para a boca do urso →</p>';
+            quantityFill.style.width = '100%';
+            forestFeedback.classList.add('hidden');
+            
+            // Ir para próxima atividade
+            showScreen(icecreamActivity);
+        });
+
+        // Atividade: Carrinho de Sorvete
+        const shapes = document.querySelectorAll('.shape');
+        const icecreamCone = document.getElementById('icecream-cone');
+        const icecreamFeedback = document.getElementById('icecream-feedback');
+
+        shapes.forEach(shape => {
+            shape.addEventListener('click', function() {
+                const shapeType = this.getAttribute('data-shape');
+                
+                // Verificar se podemos adicionar esta forma
+                const currentShapes = icecreamShapes.filter(s => s === shapeType);
+                
+                if (shapeType === 'circle' && currentShapes.length < 1) {
+                    icecreamShapes.push(shapeType);
+                    addShapeToCone(this.textContent);
+                } else if (shapeType === 'square' && currentShapes.length < 2) {
+                    icecreamShapes.push(shapeType);
+                    addShapeToCone(this.textContent);
+                } else if (shapeType === 'triangle' && currentShapes.length < 1) {
+                    icecreamShapes.push(shapeType);
+                    addShapeToCone(this.textContent);
+                }
+            });
+        });
+
+        function addShapeToCone(shapeEmoji) {
+            // Remover instrução se for a primeira forma
+            if (icecreamCone.querySelector('p')) {
+                icecreamCone.querySelector('p').remove();
+            }
+            
+            // Adicionar forma ao cone
+            const shapeElement = document.createElement('div');
+            shapeElement.className = 'shape-on-cone';
+            shapeElement.textContent = shapeEmoji;
+            shapeElement.style.fontSize = '2rem';
+            icecreamCone.insertBefore(shapeElement, icecreamCone.firstChild);
+        }
+
+        document.getElementById('check-icecream-answer').addEventListener('click', function() {
+            const circles = icecreamShapes.filter(s => s === 'circle').length;
+            const squares = icecreamShapes.filter(s => s === 'square').length;
+            const triangles = icecreamShapes.filter(s => s === 'triangle').length;
+            
+            if (circles === 1 && squares === 2 && triangles === 1) {
+                icecreamFeedback.textContent = 'Perfeito! Você montou o sorvete corretamente! 🍦';
+                icecreamFeedback.className = 'feedback-message feedback-correct';
+            } else {
+                icecreamFeedback.textContent = 'Quase lá! Verifique se tem 1 círculo, 2 quadrados e 1 triângulo.';
+                icecreamFeedback.className = 'feedback-message feedback-incorrect';
+            }
+            icecreamFeedback.classList.remove('hidden');
+        });
+
+        document.getElementById('next-icecream-activity').addEventListener('click', function() {
+            // Reiniciar atividade
+            icecreamShapes = [];
+            icecreamCone.innerHTML = '<div>🍦</div><p>Arraste as formas para a casquinha →</p>';
+            icecreamFeedback.classList.add('hidden');
+            
+            // Voltar para seleção de atividades
+            showScreen(mathSelectionScreen);
+        });
+
+        // Função para mostrar telas
+        function showScreen(screen) {
+            // Esconder todas as telas
+            mainScreen.classList.add('hidden');
+            portugueseScreen.classList.add('hidden');
+            mathSelectionScreen.classList.add('hidden');
+            pirateActivity.classList.add('hidden');
+            forestActivity.classList.add('hidden');
+            icecreamActivity.classList.add('hidden');
+            
+            // Mostrar a tela solicitada
+            screen.classList.remove('hidden');
+        }
+
+        // Função para definir navegação ativa
+        function setActiveNav(navId) {
+            // Remover classe active de todos os itens de navegação
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Adicionar classe active ao item selecionado
+            document.getElementById(navId).classList.add('active');
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configurar nome padrão
+            document.getElementById('user-name').textContent = 'Aventureiro';
+        });
+    </script>
+</body>
+</html>
